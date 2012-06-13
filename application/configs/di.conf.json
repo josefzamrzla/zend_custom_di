@@ -1,0 +1,45 @@
+{
+    "production":{
+        "services":{
+            "db":{
+                "class":"Sample_Db",
+                "single":true,
+                "parameters":[
+                    "@dbname",
+                    "@dbpwd"
+                ]
+            },
+            "logger":{
+                "class":"Sample_Logger"
+            },
+            "somemodel":{
+                "class":"Sample_Model",
+                "parameters":[
+                    "&db",
+                    "&logger",
+                    "someval"
+                ]
+            }
+        },
+        "properties":{
+            "dbname": "prod-database",
+            "dbpwd": "prod-password"
+        }
+    },
+    "testing : production":{
+        "services":{
+            "db":{
+                "class":"Sample_Db",
+                "single":false,
+                "parameters":[
+                    "@dbname",
+                    "@dbpwd"
+                ]
+            }
+        },
+        "properties":{
+            "dbpwd":"test-password"
+        }
+    },
+    "development : production": {}
+}

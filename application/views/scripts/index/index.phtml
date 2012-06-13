@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset=utf-8 />
+    <style type="text/css">
+        #main {width:720px;margin:0 auto;}
+    </style>
+</head>
+<body>
+<div id="main">
+
+    <h1>Sample DI container in ZF 1.x</h1>
+
+    <fieldset>
+        <legend>getService</legend>
+        <b>Defined services: </b>
+            <a href="<?php echo $this->url(array("action" => "index", "service" => "db")); ?>">db</a>,
+            <a href="<?php echo $this->url(array("action" => "index", "service" => "logger")); ?>">logger</a>,
+            <a href="<?php echo $this->url(array("action" => "index", "service" => "somemodel")); ?>">somemodel</a>
+            <br /><br />
+
+        <b>ServiceKey</b>: <?php echo $this->serviceKey; ?><br />
+        <b>Loaded service</b>: <pre><?php ob_start(); var_dump($this->service); ob_end_flush(); ?></pre>
+    </fieldset>
+    
+    <br />
+    
+    <fieldset>
+        <legend>getProperty</legend>
+        <b>Defined properties: </b>
+        <a href="<?php echo $this->url(array("action" => "index", "property" => "dbname")); ?>">dbname</a>,
+        <a href="<?php echo $this->url(array("action" => "index", "property" => "dbpwd")); ?>">dbpwd</a>
+        <br /><br />
+
+        <b>PropertyKey</b>: <?php echo $this->propertyKey; ?><br />
+        <b>Loaded property:</b> <pre><?php ob_start(); var_dump($this->property); ob_end_flush(); ?></pre>
+    </fieldset>
+
+    <br />
+
+    <fieldset>
+        <legend>Configuration file</legend>
+        <pre><?php echo $this->confFile; ?></pre>
+    </fieldset>
+</div>
+</body>
+</html>
