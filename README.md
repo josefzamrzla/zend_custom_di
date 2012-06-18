@@ -1,6 +1,6 @@
 # Custom simple DI container in ZF 1.x
 
-```php
+``` php
 Lightweight DI container wired to Zend Framework using action helper.
 
 // setup DIC action helper
