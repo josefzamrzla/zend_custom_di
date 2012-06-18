@@ -1,7 +1,7 @@
 # Custom simple DI container in ZF 1.x
 Lightweight DI container wired to Zend Framework using action helper.
 
-## Add action helper in bootstrap file.
+### Action helper setup in bootstrap file.
 
 ``` php
 
@@ -13,6 +13,8 @@ Zend_Controller_Action_HelperBroker::addHelper(
     )
 );
 ```
+
+### Action helper
 
 ```php
 class My_Helper_Dic extends Zend_Controller_Action_Helper_Abstract
@@ -42,7 +44,7 @@ class My_Helper_Dic extends Zend_Controller_Action_Helper_Abstract
 }
 ```
 
-## Sample usage in controller
+### Sample usage in controller
 
 ```php
 class IndexController extends Zend_Controller_Action
