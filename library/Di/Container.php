@@ -7,25 +7,21 @@ namespace Di;
 class Container
 {
     /**
-     * @var Configuration
+     * @var ConfigurationInterface
      */
     private $configuration;
 
     private $sigles = array();
 
-    private $environment;
+    private $overloaded = array();
 
     /**
-     * @param Configuration $configuration
+     * @param ConfigurationInterface $configuration
      * @param string $environment
      */
-    public function __construct(Configuration $configuration, $environment = null)
+    public function __construct(ConfigurationInterface $configuration)
     {
         $this->configuration = $configuration;
-
-        if ($environment) {
-            $this->environment = $environment;
-        }
     }
 
     /**
@@ -36,7 +32,8 @@ class Container
     {
         $serviceConf = $this->configuration->getServiceConfiguration($serviceKey);
 
-        if ($serviceConf->isSingle()) {
+        // if instance has to be single or is overloaded, take it from instance cache
+        if (in_array($serviceKey, $this->overloaded) || $serviceConf->isSingle()) {
             if (!isset($this->sigles[$serviceKey])) {
                 $this->sigles[$serviceKey] = $this->buildService($serviceConf);
             }
@@ -45,6 +42,20 @@ class Container
         }
 
         return $this->buildService($serviceConf);
+    }
+
+    /**
+     * Set overloaded service (eg. mock)
+     * @param $serviceKey
+     * @param $instance Service instance
+     */
+    public function setService($serviceKey, $instance)
+    {
+        if (!in_array($serviceKey, $this->overloaded)) {
+            $this->overloaded[] = $serviceKey;
+        }
+
+        $this->sigles[$serviceKey] = $instance;
     }
 
     /**

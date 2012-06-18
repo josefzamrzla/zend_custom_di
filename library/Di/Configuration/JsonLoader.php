@@ -31,7 +31,7 @@ class Configuration_JsonLoader implements Configuration_Loader
     /**
      * @param string $serviceKey
      * @param string $environment
-     * @return string|bool
+     * @return string
      */
     public function loadClass($serviceKey, $environment = null)
     {
@@ -40,7 +40,7 @@ class Configuration_JsonLoader implements Configuration_Loader
         if (isset($this->serviceConf[$env][$serviceKey]['class']))
             return $this->serviceConf[$env][$serviceKey]['class'];
 
-        return false;
+        return null;
     }
 
     /**
@@ -76,7 +76,7 @@ class Configuration_JsonLoader implements Configuration_Loader
     /**
      * @param string $propertyKey
      * @param string $environment
-     * @return string|bool
+     * @return string|null
      */
     public function loadProperty($propertyKey, $environment = null)
     {
@@ -85,7 +85,7 @@ class Configuration_JsonLoader implements Configuration_Loader
         if (isset($this->properties[$env][$propertyKey]))
             return $this->properties[$env][$propertyKey];
 
-        return false;
+        return null;
     }
 
     /**
@@ -126,10 +126,15 @@ class Configuration_JsonLoader implements Configuration_Loader
 
     /**
      * @param string $content
+     * @throws \InvalidArgumentException
      */
     private function mergeConfiguration($content)
     {
         $json = json_decode($content, true);
+
+        if (!is_array($json)) {
+            throw new \InvalidArgumentException("Invalid JSON file");
+        }
 
         if (isset($json['services']) || isset($json['properties'])) {
             $this->mergeEnvironmentParts(self::DEFAULT_ENVIRONMENT_NAME, $json);
@@ -142,7 +147,6 @@ class Configuration_JsonLoader implements Configuration_Loader
 
                     if (isset($json[$parentEnv])) {
                         // if env. inherits settings, load parent settings first
-
                         $this->mergeEnvironmentParts($environment, $json[$parentEnv]);
                     }
                 }
@@ -169,6 +173,10 @@ class Configuration_JsonLoader implements Configuration_Loader
     private function mergeServices($environment, array $json)
     {
         foreach ($json['services'] as $serviceKey => $serviceConf) {
+            if (isset($this->serviceConf[$environment][$serviceKey]) && is_array($this->serviceConf[$environment][$serviceKey])) {
+                $serviceConf = array_merge($this->serviceConf[$environment][$serviceKey], $serviceConf);
+            }
+
             $this->serviceConf[$environment][$serviceKey] = $serviceConf;
         }
     }
